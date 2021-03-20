@@ -33,3 +33,20 @@ def init_db():
 
 def init_app(app):
     app.teardown_appcontext(close_db)
+
+def execute_query(query):
+    db = get_db()
+    db.execute(query)
+    row_headers = [i[0] for i in db.description]
+    results = db.fetchall()
+
+    result_arr = []
+    for result in results:
+        result_arr.append(dict(zip(row_headers, result)))
+    return result_arr
+
+
+
+def get_players():
+    query = ('''SELECT * FROM Players''')
+    return execute_query(query)

@@ -1,0 +1,11 @@
+<h1>A list of players</h1>
+<table>
+{% for player in players %}
+  <tr>
+    <td>{{ player.id }}</td>
+    <td>{{ player.name }}</td>
+    <td>{{ player.login }}</td>
+    <td>{{ player.avalible }}</td>
+  </tr>
+{% endfor %}
+</table>
