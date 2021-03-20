@@ -4,8 +4,8 @@
 from subprocess import Popen, PIPE
 
 from flask import current_app as app
-from flask import render_template, request,Response, send_from_directory
-from project.db import get_db, get_players
+from flask import render_template, request, Response, send_from_directory, redirect, url_for
+from project.db import get_db, get_players, set_new_logins
 
 
 #import json
@@ -26,3 +26,8 @@ def serve(path):
 def list_players():
     players = get_players()
     return render_template('players_list.html', players=players)
+
+@app.route('/admin/update_logins')
+def update_logins():
+    set_new_logins()
+    return redirect(url_for('list_players'))

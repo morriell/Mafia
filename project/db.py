@@ -5,6 +5,8 @@
 import mysql.connector
 
 from flask import current_app as app, g
+from random import choice
+from string import ascii_lowercase
 
 
 def get_db():
@@ -30,9 +32,14 @@ def close_db(e=None):
 def init_db():
     get_db()
 
-
 def init_app(app):
     app.teardown_appcontext(close_db)
+
+def execute_update_query(query):
+    db = get_db()
+    db.execute(query)
+    g.connector.commit()
+    return
 
 def execute_query(query):
     db = get_db()
@@ -50,3 +57,21 @@ def execute_query(query):
 def get_players():
     query = ('''SELECT * FROM Players''')
     return execute_query(query)
+
+# TODO: replace it with a name generator
+def generate_login(length):
+    letters = ascii_lowercase
+    result_str = ''.join(choice(letters) for i in range(length))
+    return result_str
+
+def set_new_logins():
+    players = get_players()
+
+    # TODO use a single query
+    # TODO add check of logins is uniq
+    for player in players:
+        login = generate_login(5)
+        query = 'UPDATE Players SET login="' + login + '" WHERE id=' + str(player['id']) + ';'
+        # TODO add error processing here
+        execute_update_query(query)
+    return
